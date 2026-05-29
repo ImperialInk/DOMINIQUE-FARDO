@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="theme-color" content="#000000">
+
+<title>Dominique Fardo - Shaping Reality</title>
+<meta name="Description" CONTENT="Is reality an illusion? Beyond what you can imagine, Dominique presents the ability to manipulate reality.">
+
+<meta meta name="viewport" content="width=device-width, user-scalable=no" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+
+<meta property="og:image:width" content="1488">
+<meta property="og:image:height" content="779">
+<meta property="og:title" content="Dominique Fardo - Shaping Reality">
+<meta property="og:description" content="Is reality an illusion? Beyond what you can imagine, Dominique presents the ability to manipulate reality.">
+<meta property="og:url" content="https://www.dominiquefardo.com">
+<meta property="og:image" content="https://www.dominiquefardo.com/og-image.jpg">
+
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#64081e">
+<meta name="msapplication-TileColor" content="#64081e">
+<meta name="theme-color" content="#64081e">
+
+<link type="text/css" rel="stylesheet" href="../css/reset.css" />
+<link type="text/css" rel="stylesheet" href="../css/main.css" />
+<link type="text/css" rel="stylesheet" href="../css/form.css" />
+
+
+<script type="text/javascript" src="../js/jquery.js"></script>
+<script type="text/javascript" src="../js/easing.js"></script>
+<script type="text/javascript" src="../js/jquery.matchHeight.js"></script>
+<script type="text/javascript" src="../js/rellax.min.js"></script>
+
+
+<script>
+
+	$(document).ready(function(){
+
+		var lang = localStorage.getItem('lang') || navigator.language.slice(0, 2);
+
+		vhCheck();
+
+		$("#contact-form").submit(function (event) {
+
+				//Azzera eventuali errori e risultati precedenti
+				$('#contact-form :input').removeClass("has-error");
+				$("#contact-error").hide();
+				$("#contact-success").hide();
+
+			//Legge i dati del form
+			var formData = {
+				name: $("#data-name").val(),
+				lastname: $("#data-lastname").val(),
+				email: $("#data-email").val(),
+				phone: $("#data-phone").val(),
+				text: $("#data-text").val(),
+			};
+
+			//Invia i dati del form
+			$.ajax({
+				type: "POST",
+					url: "../form_to_mail.php",
+					data: formData,
+					dataType: "json",
+					encode: true,
+			}).done(function (data) {
+
+					/*FALLIMENTO*/
+					if (!data.success) {
+						/*Operazioni da eseguire in caso di fallimento*/
+						if (data.errors.name) {
+							$("#data-name").addClass("has-error");
+						}
+						if (data.errors.lastname) {
+							$("#data-lastname").addClass("has-error");
+						}
+						if (data.errors.email) {
+							$("#data-email").addClass("has-error");
+						}
+						if (data.errors.phone) {
+							$("#data-phone").addClass("has-error");
+						}
+						if (data.errors.text) {
+							$("#data-text").addClass("has-error");
+						}
+						if (data.errors.send_mail) {
+							$("#contact-error").html(data.errors.send_mail);
+							$("#contact-error").show();
+						}
+					}
+					/*SUCCESSO*/
+					else {
+						$("#contact-success").html(data.message);
+						$("#contact-success").show();
+					}
+
+
+			});
+
+			event.preventDefault();
+		});
+
+	});
+</script>
+
+
+</head>
+<body>
+
+
+
+	<div id="header">
+		<div class="bg centerimage"><img src="../img/header_bg.jpg" srcset="../img/header_bg@2x.jpg 2x" alt=""></div>
+		<div class="gradient black"></div>
+		<div id="header_stripe" class="centerMe_V"></div>
+		<div id="main_menu" class="serif tr">
+			<div class="main_menu_item inline tr"><a href="index.html">Home</a></div>
+			<div class="main_menu_item inline tr"><a href="about.html">About</a></div>
+			<div class="main_menu_item inline tr"><a href="the_show.html">Lo show</a></div>
+			<div class="main_menu_item inline tr"><a href="testimonials.html">Testimonial</a></div>
+			<div class="main_menu_item inline tr"><a class="showContacts">Contatti</a></div>
+		</div>
+		<div id="main_logo" class="centerMe">
+			<div id="logoCircle"><img src="../img/main_logo.svg" alt=""></div>
+			<div class="text"><img src="../img/logo_text.svg" alt=""></div>
+		</div>
+		<div id="goDown_box" class="tr"><div id="goDown_arrow" class="bounce"><img src="../img/arrow.svg" alt=""></div></div>
+	</div>
+	<div id="home_about_circle" class="circle rellax"><div class="bg centerimage"><img src="../img/home_01.jpg" srcset="../img/home_01@2x.jpg 2x" alt=""></div></div>
+	<div id="home_main_box">
+		<div class="home_stripe">
+			<h2 class="serif uppercase">VIVI MOMENTI DI MERAVIGLIA</h2>
+			<h3 class="serif">La realtà è un'illusione? Al di là di ciò che si può immaginare, Dominique presenta la capacità di manipolarla</h3>
+			<div class="spacer"></div>
+			<p>Nel nostro desiderio di ragione, significato e perfezione, temiamo il peggio. Stabiliamo i nostri limiti sulle nostre capacità e su ciò che non possiamo fare. Qualunque cosa pensiate sia la realtà è in realtà un'illusione e viceversa. La vostra percezione di ciò che è la realtà influenza tutto. Stare tra questi due mondi è un'abilità portata a voi da questo performer che offre magia intrigante e mistificante con energia e umorismo. Non si limita a intrattenere il suo pubblico; dà loro più di quello che chiedono.</p>
+			<div class="buttons_box">
+				<a href="about.html"><div class="main_btn inline serif tr">SCOPRI DI PIÙ</div></a>
+			</div>
+			<div id="about_circles_box">
+				<div class="about_small_circle circle rellax inline" data-rellax-speed="1"><div class="bg centerimage"><img src="../img/home_02.jpg" srcset="../img/home_02@2x.jpg 2x" alt=""></div></div>
+				<div class="about_big_circle circle rellax inline" data-rellax-speed="0.5"><div class="bg centerimage"><img src="../img/home_03.jpg" srcset="../img/home_03@2x.jpg 2x" alt=""></div></div>
+			</div>
+			<h2 class="serif uppercase">REALTÀ O ILLUSIONE?</h2>
+			<h3 class="serif">La realtà è solo un'illusione, anche se molto persistente.</h3>
+			<div class="spacer"></div>
+		</div>
+		<div id="home_shows_box" class="autoMargin">
+			<div class="home_show_item equalHeight inline">
+				<div class="bg centerimage"><img src="../img/home_show_01.jpg" srcset="../img/home_show_01@2x.jpg 2x" alt=""></div>
+				<div class="gradient black left"></div>
+				<div class="text">
+					<h2 class="serif uppercase">CLOSE UP</h2>
+					<div class="spacer"></div>
+					<p>Può essere difficile per noi capire la realtà. Questo perché ci viviamo ogni giorno e non possiamo osservarla da un punto di vista esterno. Ma cosa succede se ti viene data l'opportunità di sperimentare la vera realtà? Questo performer ti porta vicino alla realizzazione di questa coscienza.
+<br><br>
+Questa performance è più intima e personale, ricca di divertimento, illuminazione ed Epifania.
+</p>
+					<div class="buttons_box">
+						<a href="the_show.html"><div class="main_btn inline gray serif tr">Close Up</div></a>
+					</div>
+				</div>
+			</div>
+			<div class="home_show_item equalHeight inline right">
+				<div class="bg centerimage"><img src="../img/home_show_02.jpg" srcset="../img/home_show_02@2x.jpg 2x" alt=""></div>
+				<div class="gradient black right"></div>
+				<div class="text">
+					<h2 class="serif uppercase">SPETTACOLI DA SCENA</h2>
+					<div class="spacer"></div>
+					<p>Ciò che vediamo con i nostri occhi ha la capacità di influenzare i nostri pensieri, emozioni e comportamenti. In questo spettacolo, Dominique svela quanto possa essere inaffidabile la nostra percezione sensoriale della realtà. Sperimenta sul palco una performance che rivela la vera natura della realtà.</p>
+					<div class="buttons_box">
+						<a href="the_show.html"><div class="main_btn inline gray serif tr">SPETTACOLI DA SCENA</div></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="home_stripe">
+			<div id="home_shows_circle" class="circle"><div class="bg centerimage"><img src="../img/home_04.jpg" srcset="../img/home_04@2x.jpg 2x" alt=""></div></div>
+			<div id="home_book_now_box">
+				<h2 class="serif uppercase">FORMANDO LA REALTÀ</h2>
+				<h3 class="serif">Gli spettacoli di Dominique vi porteranno alla creazione di momenti che cambiano la vita. Sperimenterete gioia, ispirazione e un'esperienza completamente nuova. <br>
+Mettetevi in contatto ora e vi contatteremo al più presto.
+</h3>
+				<div class="spacer"></div>
+				<div class="buttons_box">
+					<a class="showContacts"><div class="main_btn inline serif tr">PRENOTA ORA</div></a>
+				</div>
+			</div>
+		</div>
+		<div class="end_stripe circle"></div>
+	</div>
+	<div id="footer">
+		<div id="social_icons_box">
+			<a target="_blank" href="https://www.instagram.com/fardodominique/"><div class="social_icon_item inline"><img src="../img/instagram-logo.svg" alt=""></div></a>
+			<a target="_blank" href="https://www.linkedin.com/in/dominique-fardo-100189230/"><div class="social_icon_item inline"><img src="../img/linkedin-logo.svg" alt=""></div></a>
+			<a target="_blank" href="https://join.skype.com/invite/jNUAd1IYd6Av?source=qr-ios"><div class="social_icon_item inline"><img src="../img/skype.svg" alt=""></div></a>
+			<a target="_blank" href="http://qr.kakao.com/talk/_ZY1.0rObWzuw5TtaU4TwJQ5IVM-"><div class="social_icon_item inline"><img src="../img/kakao.svg" alt=""></div></a>
+		</div>
+		<div id="footer_logo"><img src="../img/logo_text.svg" alt=""></div>
+		<div class="text">
+			<a href="mailto:info@dominiquefardo.com">info@dominiquefardo.com</a>
+		</div>
+		<div id="prattico_logo"><img src="../img/prattico_logo.svg" alt=""></div>
+		<div id="footer_bg">
+			<div class="bg centerimage"><img src="../img/footer_bg.jpg" srcset="../img/footer_bg@2x.jpg 2x" alt=""></div>
+			<div class="gradient black top"></div>
+		</div>
+	</div>
+	<div id="middle_bg">
+		<div class="bg centerimage"><img src="../img/home_middle_bg.jpg" srcset="../img/home_middle_bg@2x.jpg 2x" alt=""></div>
+		<div class="gradient black top"></div>
+		<div class="gradient black"></div>
+	</div>
+	<div id="mobile_menu_btn" class="showMobileMenu tr"><img class="centerMe" src="../img/menu.svg" alt=""></div>
+	<div id="mobile_menu_close" class="closeMobileMenu tr"><img class="centerMe" src="../img/close.svg" alt=""></div>
+	<div id="mobile_menu_overlay" class="closeMobileMenu tr"></div>
+
+
+	<!-- INIZIO BOX CONTATTI -->
+
+	<div class="closeContacts" id="contacts_overlay"></div>
+	<div id="contacts_box">
+		<div id="contacts_content">
+			<h3 class="serif">Per informazioni o domande, riempi il modulo in basso. Ti ricontatteremo al più presto. Grazie.</h3>
+			<form id="contact-form">
+				<div class="form_box">
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-name" name="name" type="text" required placeholder="Nome"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-lastname" name="lastname" type="text" type="text" placeholder="Cognome"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-email" name="email" type="email" required type="text" placeholder="Email"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-phone" name="phone" type="text" type="text" placeholder="Telefono"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><textarea id="data-text" name="text" type="text" required name="" placeholder="Messaggio"></textarea></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline">
+							<div class="buttons_row">
+								<button type="submit" class="main_btn tr inline">
+									<span>Invia</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline">
+							<div id="contact-success"></div>
+							<div id="contact-error"></div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="closeContacts" id="contactsCloseBtn"><img src="../img/close.svg" alt=""></div>
+	</div>
+
+	<!-- FINE BOX CONTATTI -->
+
+
+
+	<div id="lang_selection">
+		<ul>
+			<li class="visible"><div class="selected"><span>Italiano</span><img class="arrow" src="../img/arrow.svg" alt=""></div></li>
+			<li><a href="../index.html" class="transition">English</a></li>
+			<li><a href="../fr/index.html" class="transition">Français</a></li>
+			<li><a href="../de/index.html" class="transition">Deutsch</a></li>
+			<li><a href="../ko/index.html" class="transition">한국어</a></li>
+		</ul>
+	</div>
+
+
+
+	<script type="text/javascript" src="../js/vh_fix.js"></script>
+	<script>
+		(function () {
+		var isNeeded = vhCheck('vh-test');
+		}());
+
+		$(function() {
+		$('.equalHeight').matchHeight({
+		byRow: true,
+		property: 'height',
+		target: null,
+		remove: false
+		});
+		});
+
+		(function(l){var i,s={touchend:function(){}};for(i in s)l.addEventListener(i,s)})(document);
+
+		var rellax = new Rellax('.rellax');
+
+		window.onscroll = function () {
+		    scrollRotate();
+				$("#logoCircle").css("opacity", 1 - $(window).scrollTop() / $('#logoCircle').height());
+						if ($(this).scrollTop() > 0) {
+		    $('#goDown_arrow').fadeOut('slow');
+		  } else {
+		    $('#goDown_arrow').fadeIn('slow');
+		  }
+		};
+
+		function scrollRotate() {
+    let logo = document.getElementById("logoCircle");
+		    logo.style.transform = "rotate(" + window.pageYOffset/10 + "deg)";
+		}
+
+		$( "a.scrollLink" ).click(function( event ) {
+        event.preventDefault();
+        $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top-0 }, 800);
+    });
+
+		$(".showMobileMenu").click(function() {
+				$('#main_menu').addClass('show');
+				$('#mobile_menu_overlay').addClass('show');
+				$('#mobile_menu_close').addClass('show');
+		});
+
+		$(".closeMobileMenu").click(function() {
+			$('#main_menu').removeClass('show');
+			$('#mobile_menu_overlay').removeClass('show');
+			$('#mobile_menu_close').removeClass('show');
+		});
+
+		$(".showContacts").click(function() {
+				$('#contacts_overlay').addClass('show');
+				$('#contacts_box').addClass('show');
+				$('#contactsCloseBtn').addClass('show');
+				$('#mobile_menu_overlay').removeClass('show');
+				$('#mobile_menu_close').removeClass('show');
+				$('#main_menu').removeClass('show');
+		});
+
+		$(".closeContacts").click(function() {
+				$('#contacts_overlay').removeClass('show');
+				$('#contacts_box').removeClass('show');
+				$('#contactsCloseBtn').removeClass('show');
+		});
+
+		$(".openPopup").click(function() {
+				$('#popup_overlay').addClass('show');
+				$('#popup_box').addClass('show');
+				$('#contacts_overlay').removeClass('show');
+				$('#contacts_box').removeClass('show');
+				$('#contactsCloseBtn').removeClass('show');
+				$('#main_menu').removeClass('show');
+				$('#close_btn').hide();
+		});
+
+		$(".closePopup").click(function() {
+				$('#popup_overlay').removeClass('show');
+				$('#popup_box').removeClass('show');
+				$('#contactsCloseBtn').removeClass('show');
+		});
+
+		$("#lang_selection .selected").click(function() {
+				$('#lang_selection').toggleClass('show');
+		});
+
+	</script>
+
+</body>
+</html>

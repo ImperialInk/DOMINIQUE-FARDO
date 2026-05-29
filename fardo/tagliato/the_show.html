@@ -1,0 +1,442 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="theme-color" content="#000000">
+
+<title>Dominique Fardo - Shaping Reality</title>
+<meta name="Description" CONTENT="Is reality an illusion? Beyond what you can imagine, Dominique presents the ability to manipulate reality.">
+
+<meta meta name="viewport" content="width=device-width, user-scalable=no" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+
+<meta property="og:image:width" content="1488">
+<meta property="og:image:height" content="779">
+<meta property="og:title" content="Dominique Fardo - Shaping Reality">
+<meta property="og:description" content="Is reality an illusion? Beyond what you can imagine, Dominique presents the ability to manipulate reality.">
+<meta property="og:url" content="https://www.dominiquefardo.com">
+<meta property="og:image" content="https://www.dominiquefardo.com/og-image.jpg">
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#64081e">
+<meta name="msapplication-TileColor" content="#64081e">
+<meta name="theme-color" content="#64081e">
+
+<link type="text/css" rel="stylesheet" href="css/reset.css" />
+<link type="text/css" rel="stylesheet" href="css/main.css" />
+<link type="text/css" rel="stylesheet" href="css/form.css" />
+
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/easing.js"></script>
+<script type="text/javascript" src="js/jquery.matchHeight.js"></script>
+<script type="text/javascript" src="js/rellax.min.js"></script>
+
+<script>
+	$(document).ready(function(){
+
+		vhCheck();
+
+		$("#contact-form").submit(function (event) {
+
+				//Azzera eventuali errori e risultati precedenti
+				$('#contact-form :input').removeClass("has-error");
+				$("#contact-error").hide();
+				$("#contact-success").hide();
+
+			//Legge i dati del form
+			var formData = {
+				name: $("#data-name").val(),
+				lastname: $("#data-lastname").val(),
+				email: $("#data-email").val(),
+				phone: $("#data-phone").val(),
+				text: $("#data-text").val(),
+			};
+
+			//Invia i dati del form
+			$.ajax({
+				type: "POST",
+					url: "./form_to_mail.php",
+					data: formData,
+					dataType: "json",
+					encode: true,
+			}).done(function (data) {
+
+					/*FALLIMENTO*/
+					if (!data.success) {
+						/*Operazioni da eseguire in caso di fallimento*/
+						if (data.errors.name) {
+							$("#data-name").addClass("has-error");
+						}
+						if (data.errors.lastname) {
+							$("#data-lastname").addClass("has-error");
+						}
+						if (data.errors.email) {
+							$("#data-email").addClass("has-error");
+						}
+						if (data.errors.phone) {
+							$("#data-phone").addClass("has-error");
+						}
+						if (data.errors.text) {
+							$("#data-text").addClass("has-error");
+						}
+						if (data.errors.send_mail) {
+							$("#contact-error").html(data.errors.send_mail);
+							$("#contact-error").show();
+						}
+					}
+					/*SUCCESSO*/
+					else {
+						$("#contact-success").html(data.message);
+						$("#contact-success").show();
+					}
+
+
+			});
+
+			event.preventDefault();
+		});
+
+	});
+</script>
+
+
+</head>
+<body class="pages">
+
+
+
+	<div id="header">
+		<div class="bg centerimage"><img src="img/the_show_header_bg.jpg" srcset="img/the_show_header_bg@2x.jpg 2x" alt=""></div>
+		<div class="gradient black"></div>
+		<div id="header_stripe" class="centerMe_V"></div>
+		<a href="index.html"><div id="logo_text"><img src="img/logo_text.svg" alt=""></div></a>
+		<div id="main_menu" class="serif tr">
+			<div class="main_menu_item inline tr"><a href="index.html">Home</a></div>
+			<div class="main_menu_item inline tr"><a href="about.html">About</a></div>
+			<div class="main_menu_item inline tr"><a href="the_show.html">The Show</a></div>
+			<div class="main_menu_item inline tr"><a href="testimonials.html">Testimonials</a></div>
+			<div class="main_menu_item inline tr"><a class="showContacts">Contacts</a></div>
+		</div>
+		<div id="main_logo">
+			<div id="logoCircle"><img src="img/main_logo.svg" alt=""></div>
+		</div>
+		<div id="pages_title_box">
+			<h1 class="uppercase serif">The show</h1>
+			<h2 class="serif">The distinction between the past, present and future is only a stubbornly persistent illusion.</h2>
+			<div class="spacer"></div>
+		</div>
+	</div>
+	<div id="pages_main_box">
+		<div id="pages_stripe"></div>
+		<div class="section">
+			<h1 class="serif uppercase">IS THIS REAL?</h1>
+			<div class="content">
+				<div class="spacer"></div>
+				<div class="autoMargin">
+					<div class="col inline">
+						<p>It may be exciting to perceive illusions. Discerning how they work is even more invigorating and worthwhile. They hold the key to our realization of our true limits and capacity. Illusions point to the specific power of your perceptions of who we are.
+<br><br>
+Our sense of touch, taste and smell are the most striking proof of what seems factual. When we perceive something, we are quick to conclude that it is “real”. Indeed, it might seem as though the only “proof” of factual knowledge is having to perceive it. But is this true?
+</p>
+					</div>
+					<div class="col inline">
+						<p>Our sense of sight is very limited as we are unable to see what exist.
+						<br><br>
+						If we choose to label the stuff we see, hear and touch – as reality, then is it right to say reality is an illusion? How do we know that something happening around us is real? What if it is an illusion?
+ We experience reality through our senses. But the power of imagination gives us insight into illusion.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="the_show_page_item">
+			<div class="gradient black right"></div>
+			<div class="photos">
+				<div class="photo_item inline"><div class="bg centerimage"><img src="img/the_show_01.jpg" srcset="img/the_show_01@2x.jpg 2x" alt=""></div></div>
+				<div class="photo_item inline"><div class="bg centerimage"><img src="img/the_show_02.jpg" srcset="img/the_show_02@2x.jpg 2x" alt=""></div></div>
+			</div>
+			<div class="text">
+			<h2 class="serif uppercase">CLOSE UP</h2>
+			<h3 class="serif">Dominique is at his best. Members are treated to mind blowing moments of illusions.
+Our close-up is the most intimate style of Mentalism there is. No matter what your event is, Dominique will have your guests rave over the entertainment. He wows them with insights right in front of their faces, and sometimes even in their own hands! He will have your guests questioning what is real and what is possible with everyday objects.</h3>
+			<div class="spacer"></div>
+			<p>The performer opens your imaginations to the truth that will help you find yourself. Our engagements are designed to bring you as close as possible to true reality.
+
+				Take your event to the next level! No member of your audience wants to be bored by the norm or what they are already used to. Get your audience wowed by moments of truth as they are revealed by this performer. Are you interested in growing your audience’s level of participation in your events? Do you want to see joy rekindled? Give your guest the best treat ever. An experience they will never forget. 
+
+
+
+		Reach out today, and you will be contacted soon.</p>
+			<div class="buttons_box">
+				<a class="showContacts"><div class="main_btn inline serif tr gray">Book Now</div></a>
+			</div>
+			</div>
+		</div>
+		<div class="section">
+			<h1 class="serif uppercase">WHAT WE CHANGE INWARDLY <br> WILL CHANGE OUTER REALITY</h1>
+		</div>
+		<div class="the_show_page_item alt">
+			<div class="gradient black left"></div>
+			<div class="photos">
+				<div class="photo_item inline"><div class="bg centerimage"><img src="img/the_show_03.jpg" srcset="img/the_show_03@2x.jpg 2x" alt=""></div></div>
+				<div class="photo_item inline"><div class="bg centerimage"><img src="img/the_show_04.jpg" srcset="img/the_show_04@2x.jpg 2x" alt=""></div></div>
+			</div>
+			<div class="text">
+			<h2 class="serif uppercase">STAGE SHOW</h2>
+			<h3 class="serif">What can we say is the boundary between illusion and reality? We tend to see both as two opposing concepts. But are they? Illusion cannot exist separate from reality. It is also an experience that involves our perception of reality. As we have earlier implied, our belief that we live in reality comes from our emotions.
+ </h3>
+			<div class="spacer"></div>
+			<p>It’s important to understand we’re not seeing reality. We are seeing a story that’s being created for us.
+
+				Our brains bend our perceptions of reality to meet our expectations. Which happens by filling in gaps within our past experiences. Making what we see and experience as completely subjective. <br><br>
+ How do we know what is real? The adventure our brain takes us through about reality is exceptionally fascinating. Even though they may be wrong. <br><br>
+ Where our interests lie plays an important role in how we find out about the truth. Our interest should focus on knowing about our inadequacies. This quest may lead us closer to the truth.
+
+				The best of magic is not watched but experienced! Our shows are packed with truth and enlightenment. It is time to make a significant choice and be a part of a life-changing moment.
+
+				You cannot imagine what could happen to your level of productivity and awareness. When you take part in one of our shows, you will experience freedom.
+
+				To prove that what he does touches reality, participants are frequently selected at random from the audience, as you are the leading element of this show.
+
+				Are you interested in impacting the lives of those around you? Click the link below to reach out to us and you will be contacted soon.
+
+</p>
+
+
+			<div class="buttons_box">
+				<a class="showContacts"><div class="main_btn inline serif tr gray">Book Now</div></a>
+			</div>
+			</div>
+		</div>
+		<div class="red_row">
+			<div class="bg centerimage"><img src="img/about_banner_bg.jpg" srcset="img/about_banner_bg@2x.jpg 2x" alt=""></div>
+			<div class="gradient black left"></div>
+			<div class="section">
+				<div class="content">
+					<div class="autoMargin">
+						<div class="col inline full">
+							<h2 class="serif uppercase">DOMINIQUE</h2>
+							<p> 
+Dominique is a performer like no other. Unlike any other, he takes your audience into a space of entertainment, inspiration, and revelations. He exposes your audience to truths that are beyond your senses.
+<br><br>
+Reality describes all that is, all that exist and everything that appears to manifest. Which is almost impossible to contain in any known word or phrase. It is inexpressible. Everything that has ever been and will ever be is happening right now.
+<br><br>
+The conception of time is an illusion made up by our human consciousness. This performer stands in the space between illusion and reality. He stays between what’s real and what’s not, illusion and reality. Because of this, he can manipulate them and shape what’s real. He wants to reveal to us how our realities are made, how we can improve, what we can do to understand what’s real and what’s not. He stands to reveal to us on how we can make happier choices and make the world a better place.
+</p>
+							<div class="spacer"></div>
+							<div class="buttons_box">
+								<a class="about.html"><div class="main_btn inline serif tr">About</div></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="section noMargin">
+			<h1 class="serif uppercase">CONTACT US</h1>
+			<div class="content">
+				<div class="spacer"></div>
+				<div class="autoMargin">
+					<div class="col inline full">
+						<h2 class="serif small">This is the show with the capacity to increase your clientele and audience participation at any of your events.
+This show is the perfect solution and will give you so much to talk about.
+<br><br>
+Get in touch now and we will reach out to you soon.
+</h2>
+						<div class="spacer"></div>
+						<div class="buttons_box">
+							<a class="showContacts"><div class="main_btn inline serif tr">Book Now</div></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix">
+	<div class="end_stripe circle"></div>
+	</div>
+	<div id="footer">
+		<div id="social_icons_box">
+			<a target="_blank" href="https://www.instagram.com/fardodominique/"><div class="social_icon_item inline"><img src="img/instagram-logo.svg" alt=""></div></a>
+			<a target="_blank" href="https://www.linkedin.com/in/dominique-fardo-100189230/"><div class="social_icon_item inline"><img src="img/linkedin-logo.svg" alt=""></div></a>
+			<a target="_blank" href="https://join.skype.com/invite/jNUAd1IYd6Av?source=qr-ios"><div class="social_icon_item inline"><img src="img/skype.svg" alt=""></div></a>
+			<a target="_blank" href="http://qr.kakao.com/talk/_ZY1.0rObWzuw5TtaU4TwJQ5IVM-"><div class="social_icon_item inline"><img src="img/kakao.svg" alt=""></div></a>
+		</div>
+		<div id="footer_logo"><img src="img/logo_text.svg" alt=""></div>
+		<div class="text">
+			<a href="mailto:info@dominiquefardo.com">info@dominiquefardo.com</a>
+		</div>
+		<div id="prattico_logo"><img src="img/prattico_logo.svg" alt=""></div>
+		<div id="footer_bg">
+			<div class="bg centerimage"><img src="img/footer_bg.jpg" srcset="img/footer_bg@2x.jpg 2x" alt=""></div>
+			<div class="gradient black top"></div>
+		</div>
+	</div>
+	<div id="middle_bg">
+		<div class="bg centerimage"><img src="img/home_middle_bg.jpg" srcset="img/home_middle_bg@2x.jpg 2x" alt=""></div>
+		<div class="gradient black top"></div>
+		<div class="gradient black"></div>
+	</div>
+	<div id="mobile_menu_btn" class="showMobileMenu tr"><img class="centerMe" src="img/menu.svg" alt=""></div>
+	<div id="mobile_menu_close" class="closeMobileMenu tr"><img class="centerMe" src="img/close.svg" alt=""></div>
+	<div id="mobile_menu_overlay" class="closeMobileMenu tr"></div>
+
+
+	<!-- INIZIO BOX CONTATTI -->
+
+	<div class="closeContacts" id="contacts_overlay"></div>
+	<div id="contacts_box">
+		<div id="contacts_content">
+			<h3 class="serif">For all your inquiries, fill out this form below and we will reach out to you soon. Thank you.</h3>
+			<form id="contact-form">
+				<div class="form_box">
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-name" name="name" type="text" required placeholder="First Name"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-lastname" name="lastname" type="text" type="text" placeholder="Last Name"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-email" name="email" type="email" required type="text" placeholder="Email"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><input id="data-phone" name="phone" type="text" type="text" placeholder="Phone"></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline"><textarea id="data-text" name="text" type="text" required name="" placeholder="Text"></textarea></div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline">
+							<div class="buttons_row">
+								<button type="submit" class="main_btn tr inline">
+									<span>Send</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="form_row onecol autoMargin">
+						<div class="form_col inline">
+							<div id="contact-success"></div>
+							<div id="contact-error"></div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="closeContacts" id="contactsCloseBtn"><img src="img/close.svg" alt=""></div>
+	</div>
+
+	<!-- FINE BOX CONTATTI -->
+
+
+
+	<div id="lang_selection">
+		<ul>
+			<li class="visible"><div class="selected"><span>English</span><img class="arrow" src="img/arrow.svg" alt=""></div></li>
+			<li><a href="it/index.html" class="transition">Italiano</a></li>
+			<li><a href="fr/index.html" class="transition">Français</a></li>
+			<li><a href="de/index.html" class="transition">Deutsch</a></li>
+			<li><a href="ko/index.html" class="transition">한국어</a></li>
+		</ul>
+	</div>
+
+
+	<script type="text/javascript" src="js/vh_fix.js"></script>
+	<script>
+		(function () {
+		var isNeeded = vhCheck('vh-test');
+		}());
+
+		$(function() {
+		$('.equalHeight').matchHeight({
+		byRow: true,
+		property: 'height',
+		target: null,
+		remove: false
+		});
+		});
+
+		(function(l){var i,s={touchend:function(){}};for(i in s)l.addEventListener(i,s)})(document);
+
+		var rellax = new Rellax('.rellax');
+
+		window.onscroll = function () {
+		    scrollRotate();
+				$("#logoCircle").css("opacity", 1 - $(window).scrollTop() / $('#logoCircle').height());
+						if ($(this).scrollTop() > 0) {
+		    $('#goDown_arrow').fadeOut('slow');
+		  } else {
+		    $('#goDown_arrow').fadeIn('slow');
+		  }
+		};
+
+		function scrollRotate() {
+    let logo = document.getElementById("logoCircle");
+		    logo.style.transform = "rotate(" + window.pageYOffset/10 + "deg)";
+		}
+
+		$( "a.scrollLink" ).click(function( event ) {
+        event.preventDefault();
+        $("html, body").animate({ scrollTop: $($(this).attr("href")).offset().top-0 }, 800);
+    });
+
+		$(".showMobileMenu").click(function() {
+				$('#main_menu').addClass('show');
+				$('#mobile_menu_overlay').addClass('show');
+				$('#mobile_menu_close').addClass('show');
+		});
+
+		$(".closeMobileMenu").click(function() {
+			$('#main_menu').removeClass('show');
+			$('#mobile_menu_overlay').removeClass('show');
+			$('#mobile_menu_close').removeClass('show');
+		});
+
+		$(".showContacts").click(function() {
+				$('#contacts_overlay').addClass('show');
+				$('#contacts_box').addClass('show');
+				$('#contactsCloseBtn').addClass('show');
+				$('#mobile_menu_overlay').removeClass('show');
+				$('#mobile_menu_close').removeClass('show');
+				$('#main_menu').removeClass('show');
+		});
+
+		$(".closeContacts").click(function() {
+				$('#contacts_overlay').removeClass('show');
+				$('#contacts_box').removeClass('show');
+				$('#contactsCloseBtn').removeClass('show');
+		});
+
+		$(".openPopup").click(function() {
+				$('#popup_overlay').addClass('show');
+				$('#popup_box').addClass('show');
+				$('#contacts_overlay').removeClass('show');
+				$('#contacts_box').removeClass('show');
+				$('#contactsCloseBtn').removeClass('show');
+				$('#main_menu').removeClass('show');
+				$('#close_btn').hide();
+		});
+
+		$(".closePopup").click(function() {
+				$('#popup_overlay').removeClass('show');
+				$('#popup_box').removeClass('show');
+				$('#contactsCloseBtn').removeClass('show');
+		});
+
+		$("#lang_selection .selected").click(function() {
+				$('#lang_selection').toggleClass('show');
+		});
+
+	</script>
+
+</body>
+</html>

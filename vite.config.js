@@ -28,6 +28,7 @@ export default defineConfig({
         ko_about: resolve(__dirname, 'ko/about.html'),
         ko_the_show: resolve(__dirname, 'ko/the_show.html'),
         ko_testimonials: resolve(__dirname, 'ko/testimonials.html'),
+        image_audit: resolve(__dirname, 'image-audit.html'),
       },
     },
   },

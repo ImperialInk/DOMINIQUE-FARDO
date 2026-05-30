@@ -51,13 +51,12 @@
 		vhCheck();
 
 		$("#contact-form").submit(function (event) {
+			event.preventDefault();
 
-				//Azzera eventuali errori e risultati precedenti
-				$('#contact-form :input').removeClass("has-error");
-				$("#contact-error").hide();
-				$("#contact-success").hide();
+			$('#contact-form :input').removeClass("has-error");
+			$("#contact-error").hide();
+			$("#contact-success").hide();
 
-			//Legge i dati del form
 			var formData = {
 				name: $("#data-name").val(),
 				lastname: $("#data-lastname").val(),
@@ -66,48 +65,49 @@
 				text: $("#data-text").val(),
 			};
 
-			//Invia i dati del form
+			var supabaseUrl = "https://amsxrkybkoxchscgxunv.supabase.co";
+			var supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtc3hya3lia294Y2hzY2d4dW52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNjkzNTEsImV4cCI6MjA5NTY0NTM1MX0.e15H4w0TV2_G22XajiHLs7RbGnwukZLbPWvujd4cjJY";
+
 			$.ajax({
 				type: "POST",
-					url: "./form_to_mail.php",
-					data: formData,
-					dataType: "json",
-					encode: true,
+				url: supabaseUrl + "/functions/v1/contact-form",
+				data: JSON.stringify(formData),
+				contentType: "application/json",
+				dataType: "json",
+				headers: {
+					"Authorization": "Bearer " + supabaseAnonKey,
+					"apikey": supabaseAnonKey
+				},
 			}).done(function (data) {
-
-					/*FALLIMENTO*/
-					if (!data.success) {
-						/*Operazioni da eseguire in caso di fallimento*/
-						if (data.errors.name) {
-							$("#data-name").addClass("has-error");
-						}
-						if (data.errors.lastname) {
-							$("#data-lastname").addClass("has-error");
-						}
-						if (data.errors.email) {
-							$("#data-email").addClass("has-error");
-						}
-						if (data.errors.phone) {
-							$("#data-phone").addClass("has-error");
-						}
-						if (data.errors.text) {
-							$("#data-text").addClass("has-error");
-						}
-						if (data.errors.send_mail) {
-							$("#contact-error").html(data.errors.send_mail);
-							$("#contact-error").show();
-						}
+				if (!data.success) {
+					if (data.errors.name) {
+						$("#data-name").addClass("has-error");
 					}
-					/*SUCCESSO*/
-					else {
-						$("#contact-success").html(data.message);
-						$("#contact-success").show();
+					if (data.errors.lastname) {
+						$("#data-lastname").addClass("has-error");
 					}
-
-
+					if (data.errors.email) {
+						$("#data-email").addClass("has-error");
+					}
+					if (data.errors.phone) {
+						$("#data-phone").addClass("has-error");
+					}
+					if (data.errors.text) {
+						$("#data-text").addClass("has-error");
+					}
+					if (data.errors.send_mail) {
+						$("#contact-error").html(data.errors.send_mail);
+						$("#contact-error").show();
+					}
+				} else {
+					$("#contact-success").html(data.message);
+					$("#contact-success").show();
+					$("#contact-form")[0].reset();
+				}
+			}).fail(function () {
+				$("#contact-error").html("An error occurred, please try again.");
+				$("#contact-error").show();
 			});
-
-			event.preventDefault();
 		});
 
 	});

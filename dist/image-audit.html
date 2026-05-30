@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Audit - Dominique Fardo</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #e0e0e0; padding: 20px; }
+h1 { margin-bottom: 10px; color: #fff; }
+h2 { margin: 30px 0 15px; color: #ccc; border-bottom: 1px solid #333; padding-bottom: 8px; }
+.summary { background: #2a2a2a; padding: 15px; border-radius: 8px; margin-bottom: 30px; }
+.summary span { display: inline-block; margin-right: 20px; }
+.ok { color: #4caf50; }
+.broken { color: #f44336; }
+.warn { color: #ff9800; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px; }
+.card { background: #2a2a2a; border-radius: 8px; overflow: hidden; border: 2px solid #333; }
+.card.loaded { border-color: #4caf50; }
+.card.failed { border-color: #f44336; }
+.card .thumb { width: 100%; height: 150px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.card .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.card .info { padding: 10px; font-size: 12px; }
+.card .info .name { font-weight: bold; word-break: break-all; margin-bottom: 4px; color: #fff; }
+.card .info .path { color: #888; word-break: break-all; margin-bottom: 4px; }
+.card .info .status { font-weight: bold; }
+
+table { width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 13px; }
+th, td { padding: 8px 10px; border: 1px solid #333; text-align: left; vertical-align: top; }
+th { background: #2a2a2a; color: #fff; position: sticky; top: 0; }
+tr:nth-child(even) { background: #222; }
+td.path { word-break: break-all; max-width: 250px; }
+</style>
+</head>
+<body>
+
+<h1>Image Audit Report</h1>
+<div class="summary" id="summary">Loading...</div>
+
+<h2>Section 1: All Image Files in /img/ (Thumbnail Preview)</h2>
+<div class="grid" id="grid-img"></div>
+
+<h2>Section 2: All Image Files in /img/recovered/ (if exists)</h2>
+<div class="grid" id="grid-recovered"></div>
+
+<h2>Section 3: Images Referenced by Website Pages</h2>
+<table id="ref-table">
+<thead>
+<tr>
+<th>Used In</th>
+<th>Image Path</th>
+<th>Type</th>
+<th>File Exists</th>
+<th>Loads Visually</th>
+<th>Preview</th>
+<th>Possible Replacement</th>
+</tr>
+</thead>
+<tbody id="ref-tbody"></tbody>
+</table>
+
+<script>
+const imgFiles = [
+  "_2136864.jpg",
+  "_2136985 copy.jpg",
+  "_2136985.jpg",
+  "_2137110.jpg",
+  "_2137463.jpg",
+  "aIMGP4537 copy.jpg",
+  "aIMGP4537.jpg",
+  "aIMGP4550_1.jpg",
+  "about_banner_bg.jpg",
+  "about_banner_bg@2x.jpg",
+  "about_gallery_01.jpg",
+  "about_gallery_01@2x.jpg",
+  "about_gallery_02.jpg",
+  "about_gallery_02@2x.jpg",
+  "about_gallery_03.jpg",
+  "about_gallery_03@2x.jpg",
+  "about_gallery_04.jpg",
+  "about_gallery_04@2x.jpg",
+  "about_hrader_bg.jpg",
+  "about_hrader_bg@2x.jpg",
+  "arrow.svg",
+  "close.svg",
+  "facebook-logo.svg",
+  "footer_bg.jpg",
+  "footer_bg@2x.jpg",
+  "header_bg.jpg",
+  "header_bg@2x.jpg",
+  "home_01.jpg",
+  "home_01@2x.jpg",
+  "home_02.jpg",
+  "home_02@2x.jpg",
+  "home_03.jpg",
+  "home_03@2x.jpg",
+  "home_04.jpg",
+  "home_04@2x.jpg",
+  "home_middle_bg.jpg",
+  "home_middle_bg@2x.jpg",
+  "home_show_01.jpg",
+  "home_show_01@2x.jpg",
+  "home_show_02.jpg",
+  "home_show_02@2x.jpg",
+  "instagram-logo.svg",
+  "kakao.svg",
+  "linkedin-logo.svg",
+  "logo_text.svg",
+  "main_logo.svg",
+  "media_header_bg.jpg",
+  "media_header_bg@2x.jpg",
+  "media_player_01.jpg",
+  "media_player_01@2x.jpg",
+  "media_player_02.jpg",
+  "media_player_02@2x.jpg",
+  "menu.svg",
+  "play_btn.svg",
+  "prattico_logo.svg",
+  "skype.svg",
+  "the_show_01.jpg",
+  "the_show_01@2x.jpg",
+  "the_show_02.jpg",
+  "the_show_02@2x.jpg",
+  "the_show_03.jpg",
+  "the_show_03@2x.jpg",
+  "the_show_04.jpg",
+  "the_show_04@2x.jpg",
+  "the_show_banner_bg.jpg",
+  "the_show_banner_bg@2x.jpg",
+  "the_show_header_bg.jpg",
+  "the_show_header_bg@2x.jpg",
+  "twitter-logo.svg",
+  "whatsapp.svg"
+];
+
+const references = [
+  { page: "index.html", path: "/img/header_bg.jpg", type: "img src" },
+  { page: "index.html", path: "/img/header_bg@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/main_logo.svg", type: "img src" },
+  { page: "index.html", path: "/img/logo_text.svg", type: "img src" },
+  { page: "index.html", path: "/img/arrow.svg", type: "img src" },
+  { page: "index.html", path: "/img/home_01.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_01@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/home_02.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_02@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/home_03.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_03@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/home_show_01.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_show_01@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/home_show_02.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_show_02@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/home_04.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_04@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/footer_bg.jpg", type: "img src" },
+  { page: "index.html", path: "/img/footer_bg@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/home_middle_bg.jpg", type: "img src" },
+  { page: "index.html", path: "/img/home_middle_bg@2x.jpg", type: "srcset" },
+  { page: "index.html", path: "/img/instagram-logo.svg", type: "img src" },
+  { page: "index.html", path: "/img/linkedin-logo.svg", type: "img src" },
+  { page: "index.html", path: "/img/skype.svg", type: "img src" },
+  { page: "index.html", path: "/img/kakao.svg", type: "img src" },
+  { page: "index.html", path: "/img/menu.svg", type: "img src" },
+  { page: "index.html", path: "/img/close.svg", type: "img src" },
+  { page: "about.html", path: "/img/about_hrader_bg.jpg", type: "img src" },
+  { page: "about.html", path: "/img/about_hrader_bg@2x.jpg", type: "srcset" },
+  { page: "about.html", path: "/img/home_01.jpg", type: "img src" },
+  { page: "about.html", path: "/img/home_01@2x.jpg", type: "srcset" },
+  { page: "about.html", path: "/img/about_gallery_01.jpg", type: "img src" },
+  { page: "about.html", path: "/img/about_gallery_01@2x.jpg", type: "srcset" },
+  { page: "about.html", path: "/img/about_gallery_02.jpg", type: "img src" },
+  { page: "about.html", path: "/img/about_gallery_02@2x.jpg", type: "srcset" },
+  { page: "about.html", path: "/img/about_gallery_03.jpg", type: "img src" },
+  { page: "about.html", path: "/img/about_gallery_03@2x.jpg", type: "srcset" },
+  { page: "about.html", path: "/img/about_gallery_04.jpg", type: "img src" },
+  { page: "about.html", path: "/img/about_gallery_04@2x.jpg", type: "srcset" },
+  { page: "about.html", path: "/img/about_banner_bg.jpg", type: "img src" },
+  { page: "about.html", path: "/img/about_banner_bg@2x.jpg", type: "srcset" },
+  { page: "the_show.html", path: "/img/the_show_header_bg.jpg", type: "img src" },
+  { page: "the_show.html", path: "/img/the_show_header_bg@2x.jpg", type: "srcset" },
+  { page: "the_show.html", path: "/img/the_show_01.jpg", type: "img src" },
+  { page: "the_show.html", path: "/img/the_show_01@2x.jpg", type: "srcset" },
+  { page: "the_show.html", path: "/img/the_show_02.jpg", type: "img src" },
+  { page: "the_show.html", path: "/img/the_show_02@2x.jpg", type: "srcset" },
+  { page: "the_show.html", path: "/img/the_show_03.jpg", type: "img src" },
+  { page: "the_show.html", path: "/img/the_show_03@2x.jpg", type: "srcset" },
+  { page: "the_show.html", path: "/img/the_show_04.jpg", type: "img src" },
+  { page: "the_show.html", path: "/img/the_show_04@2x.jpg", type: "srcset" },
+  { page: "the_show.html", path: "/img/the_show_banner_bg.jpg", type: "img src" },
+  { page: "the_show.html", path: "/img/the_show_banner_bg@2x.jpg", type: "srcset" },
+  { page: "testimonials.html", path: "/img/media_header_bg.jpg", type: "img src" },
+  { page: "testimonials.html", path: "/img/media_header_bg@2x.jpg", type: "srcset" },
+  { page: "testimonials.html", path: "/img/media_player_01.jpg", type: "img src" },
+  { page: "testimonials.html", path: "/img/media_player_01@2x.jpg", type: "srcset" },
+  { page: "testimonials.html", path: "/img/media_player_02.jpg", type: "img src" },
+  { page: "testimonials.html", path: "/img/media_player_02@2x.jpg", type: "srcset" },
+  { page: "css/main.css", path: "/img/header_bg.jpg", type: "CSS url()" },
+  { page: "favicons", path: "/apple-touch-icon.png", type: "link" },
+  { page: "favicons", path: "/favicon-32x32.png", type: "link" },
+  { page: "favicons", path: "/favicon-16x16.png", type: "link" },
+  { page: "og:image", path: "/og-image.jpg", type: "meta" },
+];
+
+const unreferencedFiles = [
+  "_2136864.jpg",
+  "_2136985 copy.jpg",
+  "_2136985.jpg",
+  "_2137110.jpg",
+  "_2137463.jpg",
+  "aIMGP4537 copy.jpg",
+  "aIMGP4537.jpg",
+  "aIMGP4550_1.jpg"
+];
+
+let loaded = 0, failed = 0, total = imgFiles.length;
+
+function createCard(filename, basePath) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const thumbDiv = document.createElement('div');
+  thumbDiv.className = 'thumb';
+  const img = document.createElement('img');
+  img.src = basePath + filename;
+  img.alt = filename;
+  img.onload = function() {
+    if (this.naturalWidth === 0) {
+      card.classList.add('failed');
+      failed++;
+    } else {
+      card.classList.add('loaded');
+      loaded++;
+    }
+    updateSummary();
+  };
+  img.onerror = function() {
+    card.classList.add('failed');
+    failed++;
+    updateSummary();
+  };
+  thumbDiv.appendChild(img);
+
+  const info = document.createElement('div');
+  info.className = 'info';
+  const isUnreferenced = unreferencedFiles.includes(filename);
+  info.innerHTML = `
+    <div class="name">${filename}</div>
+    <div class="path">${basePath}${filename}</div>
+    <div class="status">Loading...</div>
+    ${isUnreferenced ? '<div style="color:#ff9800;margin-top:4px;">NOT referenced by any page - possible replacement source</div>' : ''}
+  `;
+
+  card.appendChild(thumbDiv);
+  card.appendChild(info);
+
+  setTimeout(() => {
+    const status = info.querySelector('.status');
+    if (card.classList.contains('loaded')) {
+      status.innerHTML = '<span class="ok">LOADED OK</span>';
+    } else {
+      status.innerHTML = '<span class="broken">FAILED / 0 bytes</span>';
+    }
+  }, 3000);
+
+  return card;
+}
+
+function updateSummary() {
+  document.getElementById('summary').innerHTML = `
+    <span>Total files: <strong>${total}</strong></span>
+    <span class="ok">Loaded: <strong>${loaded}</strong></span>
+    <span class="broken">Failed/Empty: <strong>${failed}</strong></span>
+    <span class="warn">Pending: <strong>${total - loaded - failed}</strong></span>
+  `;
+}
+
+// Section 1: All files in /img/
+const grid = document.getElementById('grid-img');
+imgFiles.forEach(f => {
+  grid.appendChild(createCard(f, '/img/'));
+});
+
+// Section 2: Recovered folder
+const gridRecovered = document.getElementById('grid-recovered');
+const recoveredTest = new Image();
+recoveredTest.src = '/img/recovered/test.jpg';
+recoveredTest.onerror = () => {
+  gridRecovered.innerHTML = '<p style="color:#888;">No /img/recovered/ folder found or empty.</p>';
+};
+
+// Section 3: Reference table
+const tbody = document.getElementById('ref-tbody');
+references.forEach(ref => {
+  const tr = document.createElement('tr');
+  const img = new Image();
+  img.src = ref.path;
+
+  const previewTd = document.createElement('td');
+  const previewImg = document.createElement('img');
+  previewImg.src = ref.path;
+  previewImg.style.maxWidth = '80px';
+  previewImg.style.maxHeight = '50px';
+  previewTd.appendChild(previewImg);
+
+  const existsTd = document.createElement('td');
+  const loadsTd = document.createElement('td');
+
+  img.onload = function() {
+    existsTd.innerHTML = '<span class="ok">Yes</span>';
+    if (this.naturalWidth === 0) {
+      loadsTd.innerHTML = '<span class="broken">No (0 bytes)</span>';
+    } else {
+      loadsTd.innerHTML = '<span class="ok">Yes</span>';
+    }
+  };
+  img.onerror = function() {
+    existsTd.innerHTML = '<span class="broken">No (404)</span>';
+    loadsTd.innerHTML = '<span class="broken">No</span>';
+  };
+
+  const possibleMatch = ref.path.endsWith('.jpg') || ref.path.endsWith('.png')
+    ? unreferencedFiles.map(f => '/img/' + f).join(', ')
+    : '-';
+
+  tr.innerHTML = `
+    <td>${ref.page}</td>
+    <td class="path">${ref.path}</td>
+    <td>${ref.type}</td>
+  `;
+  tr.appendChild(existsTd);
+  tr.appendChild(loadsTd);
+  tr.appendChild(previewTd);
+  const matchTd = document.createElement('td');
+  matchTd.className = 'path';
+  matchTd.textContent = ref.path.endsWith('.svg') ? 'SVG - should work' : 'Needs real image data';
+  tr.appendChild(matchTd);
+  tbody.appendChild(tr);
+});
+
+updateSummary();
+</script>
+</body>
+</html>

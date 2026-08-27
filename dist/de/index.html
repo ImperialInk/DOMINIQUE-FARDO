@@ -147,8 +147,19 @@
 				<a href="about.html"><div class="main_btn inline serif tr">Mehr erfahren</div></a>
 			</div>
 			<div id="about_circles_box">
-				<div class="about_small_circle circle rellax inline" data-rellax-speed="1"><div class="bg centerimage"><img src="/img/home_02.jpg" srcset="/img/home_02@2x.jpg 2x" alt=""></div></div>
-				<div class="about_big_circle circle rellax inline" data-rellax-speed="0.5"><div class="bg centerimage"><img src="/img/home_03.jpg" srcset="/img/home_03@2x.jpg 2x" alt=""></div></div>
+				<div class="about_small_circle circle rellax inline" data-rellax-speed="1"><div class="bg centerimage"><img src="/img/home_03.jpg" srcset="/img/home_03@2x.jpg 2x" alt=""></div></div>
+				<div class="about_big_circle circle rellax inline" data-rellax-speed="0.5">
+					<div id="video-player-wrapper">
+						<video id="promo-video" preload="metadata" playsinline>
+							<source src="/img/promo_video.mp4" type="video/mp4">
+						</video>
+						<div id="video-overlay">
+							<div class="video-play-btn">
+								<img src="/img/play_btn.svg" alt="Play">
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			<h2 class="serif uppercase">REALITÄT ODER DOCH NUR EINE ILLUSION?</h2>
 			<h3 class="serif">Realität ist letzendlich nur eine illusion, wenn auch nur eine sehr hartnäckige. </h3>
@@ -376,6 +387,45 @@ Melden sie sich jetzt bei uns, und wir werden uns so schnell wie möglich bei ih
 		});
 
 
+	</script>
+
+	<script>
+		(function() {
+			var video = document.getElementById('promo-video');
+			var overlay = document.getElementById('video-overlay');
+			var wrapper = document.getElementById('video-player-wrapper');
+
+			overlay.addEventListener('click', function() {
+				var goFS = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.msRequestFullscreen;
+				if (goFS) {
+					var p = goFS.call(wrapper);
+					if (p && p.then) {
+						p.then(function() { overlay.style.display = 'none'; video.play(); });
+					} else {
+						setTimeout(function() { overlay.style.display = 'none'; video.play(); }, 300);
+					}
+				} else {
+					overlay.style.display = 'none';
+					video.play();
+				}
+			});
+
+			video.addEventListener('ended', function() {
+				video.currentTime = 0;
+				overlay.style.display = '';
+				var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+				if (fsEl) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
+			});
+
+			document.addEventListener('fullscreenchange', handleExit);
+			document.addEventListener('webkitfullscreenchange', handleExit);
+			function handleExit() {
+				if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+					video.pause();
+					overlay.style.display = '';
+				}
+			}
+		})();
 	</script>
 
 </body>

@@ -870,7 +870,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', e
 }
 
 .about_small_circle .bg {
-  opacity: 0.18;
+  opacity: 0.6;
 }
 
 .about_big_circle {
@@ -2133,3 +2133,90 @@ textarea {
       border-radius:60px!important;
       display: none;
     }
+
+/* Video Player */
+#video-player-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+#video-player-wrapper:fullscreen,
+#video-player-wrapper:-webkit-full-screen {
+  border-radius: 0;
+  background: #000;
+}
+
+#promo-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+
+#video-player-wrapper:fullscreen #promo-video,
+#video-player-wrapper:-webkit-full-screen #promo-video {
+  position: static;
+  transform: none;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  border-radius: 50%;
+}
+
+#video-player-wrapper:fullscreen #video-overlay,
+#video-player-wrapper:-webkit-full-screen #video-overlay {
+  border-radius: 0;
+}
+
+.video-play-btn {
+  width: 50px;
+  height: 50px;
+  animation: playPulse 2.5s ease-in-out infinite;
+}
+
+.video-play-btn img {
+  width: 100%;
+  height: 100%;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+@keyframes playPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.about_small_circle .bg img {
+  filter: grayscale(100%);
+}
+

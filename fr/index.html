@@ -385,17 +385,28 @@ Prenez contact dès maintenant et nous vous répondrons bientôt.
 
 	</script>
 
-	<script src="https://www.youtube.com/iframe_api"></script>
 	<script>
 		var ytPlayer;
 		var videoOverlay = document.getElementById('video-overlay');
 		var playerWrapper = document.getElementById('video-player-wrapper');
+		var ytReady = false;
+
+		function loadYTApi() {
+			var tag = document.createElement('script');
+			tag.src = 'https://www.youtube.com/iframe_api';
+			document.head.appendChild(tag);
+		}
 
 		function onYouTubeIframeAPIReady() {
+			ytReady = true;
+		}
+
+		function createPlayer(cb) {
+			if (ytPlayer) { cb(); return; }
 			ytPlayer = new YT.Player('youtube-player', {
 				videoId: '02J5kyaJ2j0',
-				host: 'https://www.youtube-nocookie.com',
 				playerVars: {
+					enablejsapi: 1,
 					controls: 0,
 					disablekb: 1,
 					fs: 0,
@@ -403,54 +414,46 @@ Prenez contact dès maintenant et nous vous répondrons bientôt.
 					modestbranding: 1,
 					rel: 0,
 					showinfo: 0,
-					playsinline: 1
+					playsinline: 1,
+					origin: window.location.origin
 				},
 				events: {
-					'onReady': onPlayerReady,
+					'onReady': function() { cb(); },
 					'onStateChange': onPlayerStateChange
 				}
 			});
 		}
 
-		function onPlayerReady(event) {
-			videoOverlay.addEventListener('click', function() {
-				var wrapperEl = playerWrapper;
-				var fsEl = wrapperEl.requestFullscreen || wrapperEl.webkitRequestFullscreen || wrapperEl.msRequestFullscreen;
-				if (fsEl) {
-					var fsPromise = wrapperEl.requestFullscreen ? wrapperEl.requestFullscreen() :
-						wrapperEl.webkitRequestFullscreen ? wrapperEl.webkitRequestFullscreen() :
-						wrapperEl.msRequestFullscreen();
-					if (fsPromise && fsPromise.then) {
-						fsPromise.then(function() {
-							videoOverlay.style.display = 'none';
-							ytPlayer.playVideo();
-						});
+		videoOverlay.addEventListener('click', function() {
+			if (!ytReady) return;
+			createPlayer(function() {
+				var el = playerWrapper;
+				var goFS = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+				if (goFS) {
+					var p = goFS.call(el);
+					if (p && p.then) {
+						p.then(function() { videoOverlay.style.display = 'none'; ytPlayer.playVideo(); });
 					} else {
-						setTimeout(function() {
-							videoOverlay.style.display = 'none';
-							ytPlayer.playVideo();
-						}, 300);
+						setTimeout(function() { videoOverlay.style.display = 'none'; ytPlayer.playVideo(); }, 300);
 					}
 				} else {
 					videoOverlay.style.display = 'none';
 					ytPlayer.playVideo();
 				}
 			});
-		}
+		});
 
 		function onPlayerStateChange(event) {
 			if (event.data === YT.PlayerState.ENDED) {
 				ytPlayer.stopVideo();
 				videoOverlay.style.display = '';
-				if (document.fullscreenElement || document.webkitFullscreenElement) {
-					(document.exitFullscreen || document.webkitExitFullscreen).call(document);
-				}
+				var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+				if (fsEl) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
 			}
 		}
 
 		document.addEventListener('fullscreenchange', handleFsExit);
 		document.addEventListener('webkitfullscreenchange', handleFsExit);
-
 		function handleFsExit() {
 			if (!document.fullscreenElement && !document.webkitFullscreenElement) {
 				if (ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
@@ -459,6 +462,8 @@ Prenez contact dès maintenant et nous vous répondrons bientôt.
 				videoOverlay.style.display = '';
 			}
 		}
+
+		loadYTApi();
 	</script>
 
 </body>

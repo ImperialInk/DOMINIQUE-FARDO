@@ -147,8 +147,18 @@
 				<a href="about.html"><div class="main_btn inline serif tr">LEARN MORE</div></a>
 			</div>
 			<div id="about_circles_box">
-				<div class="about_small_circle circle rellax inline" data-rellax-speed="1"><div class="bg centerimage"><img src="/img/home_02.jpg" srcset="/img/home_02@2x.jpg 2x" alt=""></div></div>
-				<div class="about_big_circle circle rellax inline" data-rellax-speed="0.5"><div class="bg centerimage"><img src="/img/home_03.jpg" srcset="/img/home_03@2x.jpg 2x" alt=""></div></div>
+				<div class="about_small_circle circle rellax inline" data-rellax-speed="1"><div class="bg centerimage"><img src="/img/home_03.jpg" srcset="/img/home_03@2x.jpg 2x" alt=""></div></div>
+				<div class="about_big_circle circle rellax inline" data-rellax-speed="0.5">
+					<div id="video-player-wrapper">
+						<div id="video-overlay">
+							<img src="/img/main_logo.svg" alt="Dominique Fardo" class="video-logo">
+							<div class="video-play-btn">
+								<img src="/img/play_btn.svg" alt="Play">
+							</div>
+						</div>
+						<div id="youtube-player"></div>
+					</div>
+				</div>
 			</div>
 			<h2 class="serif uppercase">REALITY OR ILLUSION?</h2>
 			<h3 class="serif">Reality is merely an illusion, albeit a very persistent one.</h3>
@@ -368,6 +378,82 @@ Get in touch now and we will reach out to you soon.</h3>
 				$('#lang_selection').toggleClass('show');
 		});
 
+	</script>
+
+	<script src="https://www.youtube.com/iframe_api"></script>
+	<script>
+		var ytPlayer;
+		var videoOverlay = document.getElementById('video-overlay');
+		var playerWrapper = document.getElementById('video-player-wrapper');
+
+		function onYouTubeIframeAPIReady() {
+			ytPlayer = new YT.Player('youtube-player', {
+				videoId: '02J5kyaJ2j0',
+				host: 'https://www.youtube-nocookie.com',
+				playerVars: {
+					controls: 0,
+					disablekb: 1,
+					fs: 0,
+					iv_load_policy: 3,
+					modestbranding: 1,
+					rel: 0,
+					showinfo: 0,
+					playsinline: 1
+				},
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange
+				}
+			});
+		}
+
+		function onPlayerReady(event) {
+			videoOverlay.addEventListener('click', function() {
+				var wrapperEl = playerWrapper;
+				var fsEl = wrapperEl.requestFullscreen || wrapperEl.webkitRequestFullscreen || wrapperEl.msRequestFullscreen;
+				if (fsEl) {
+					var fsPromise = wrapperEl.requestFullscreen ? wrapperEl.requestFullscreen() :
+						wrapperEl.webkitRequestFullscreen ? wrapperEl.webkitRequestFullscreen() :
+						wrapperEl.msRequestFullscreen();
+					if (fsPromise && fsPromise.then) {
+						fsPromise.then(function() {
+							videoOverlay.style.display = 'none';
+							ytPlayer.playVideo();
+						});
+					} else {
+						setTimeout(function() {
+							videoOverlay.style.display = 'none';
+							ytPlayer.playVideo();
+						}, 300);
+					}
+				} else {
+					videoOverlay.style.display = 'none';
+					ytPlayer.playVideo();
+				}
+			});
+		}
+
+		function onPlayerStateChange(event) {
+			if (event.data === YT.PlayerState.ENDED) {
+				ytPlayer.stopVideo();
+				videoOverlay.style.display = '';
+				if (document.fullscreenElement || document.webkitFullscreenElement) {
+					(document.exitFullscreen || document.webkitExitFullscreen).call(document);
+				}
+			}
+		}
+
+		document.addEventListener('fullscreenchange', handleFsExit);
+		document.addEventListener('webkitfullscreenchange', handleFsExit);
+
+		function handleFsExit() {
+			if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+				if (ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+					ytPlayer.pauseVideo();
+				}
+				videoOverlay.style.display = '';
+			}
+		}
 	</script>
 
 </body>

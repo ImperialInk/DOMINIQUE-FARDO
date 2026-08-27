@@ -150,13 +150,14 @@
 				<div class="about_small_circle circle rellax inline" data-rellax-speed="1"><div class="bg centerimage"><img src="/img/home_03.jpg" srcset="/img/home_03@2x.jpg 2x" alt=""></div></div>
 				<div class="about_big_circle circle rellax inline" data-rellax-speed="0.5">
 					<div id="video-player-wrapper">
+						<video id="promo-video" preload="metadata" playsinline>
+							<source src="/img/promo_video.mp4" type="video/mp4">
+						</video>
 						<div id="video-overlay">
-							<img src="/img/main_logo.svg" alt="Dominique Fardo" class="video-logo">
 							<div class="video-play-btn">
 								<img src="/img/play_btn.svg" alt="Play">
 							</div>
 						</div>
-						<div id="youtube-player"></div>
 					</div>
 				</div>
 			</div>
@@ -380,84 +381,42 @@
 	</script>
 
 	<script>
-		var ytPlayer;
-		var videoOverlay = document.getElementById('video-overlay');
-		var playerWrapper = document.getElementById('video-player-wrapper');
-		var ytReady = false;
+		(function() {
+			var video = document.getElementById('promo-video');
+			var overlay = document.getElementById('video-overlay');
+			var wrapper = document.getElementById('video-player-wrapper');
 
-		function loadYTApi() {
-			var tag = document.createElement('script');
-			tag.src = 'https://www.youtube.com/iframe_api';
-			document.head.appendChild(tag);
-		}
-
-		function onYouTubeIframeAPIReady() {
-			ytReady = true;
-		}
-
-		function createPlayer(cb) {
-			if (ytPlayer) { cb(); return; }
-			ytPlayer = new YT.Player('youtube-player', {
-				videoId: '02J5kyaJ2j0',
-				playerVars: {
-					enablejsapi: 1,
-					controls: 0,
-					disablekb: 1,
-					fs: 0,
-					iv_load_policy: 3,
-					modestbranding: 1,
-					rel: 0,
-					showinfo: 0,
-					playsinline: 1,
-					origin: window.location.origin
-				},
-				events: {
-					'onReady': function() { cb(); },
-					'onStateChange': onPlayerStateChange
-				}
-			});
-		}
-
-		videoOverlay.addEventListener('click', function() {
-			if (!ytReady) return;
-			createPlayer(function() {
-				var el = playerWrapper;
-				var goFS = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+			overlay.addEventListener('click', function() {
+				var goFS = wrapper.requestFullscreen || wrapper.webkitRequestFullscreen || wrapper.msRequestFullscreen;
 				if (goFS) {
-					var p = goFS.call(el);
+					var p = goFS.call(wrapper);
 					if (p && p.then) {
-						p.then(function() { videoOverlay.style.display = 'none'; ytPlayer.playVideo(); });
+						p.then(function() { overlay.style.display = 'none'; video.play(); });
 					} else {
-						setTimeout(function() { videoOverlay.style.display = 'none'; ytPlayer.playVideo(); }, 300);
+						setTimeout(function() { overlay.style.display = 'none'; video.play(); }, 300);
 					}
 				} else {
-					videoOverlay.style.display = 'none';
-					ytPlayer.playVideo();
+					overlay.style.display = 'none';
+					video.play();
 				}
 			});
-		});
 
-		function onPlayerStateChange(event) {
-			if (event.data === YT.PlayerState.ENDED) {
-				ytPlayer.stopVideo();
-				videoOverlay.style.display = '';
+			video.addEventListener('ended', function() {
+				video.currentTime = 0;
+				overlay.style.display = '';
 				var fsEl = document.fullscreenElement || document.webkitFullscreenElement;
 				if (fsEl) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
-			}
-		}
+			});
 
-		document.addEventListener('fullscreenchange', handleFsExit);
-		document.addEventListener('webkitfullscreenchange', handleFsExit);
-		function handleFsExit() {
-			if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-				if (ytPlayer && ytPlayer.getPlayerState && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-					ytPlayer.pauseVideo();
+			document.addEventListener('fullscreenchange', handleExit);
+			document.addEventListener('webkitfullscreenchange', handleExit);
+			function handleExit() {
+				if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+					video.pause();
+					overlay.style.display = '';
 				}
-				videoOverlay.style.display = '';
 			}
-		}
-
-		loadYTApi();
+		})();
 	</script>
 
 </body>
